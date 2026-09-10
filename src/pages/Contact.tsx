@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Phone, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { isSupabaseConfigured, supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -36,6 +36,12 @@ const Contact = () => {
     if (!message || message.length < 10 || message.length > 5000) {
       toast.error("Message must be between 10 and 5000 characters.");
       setLoading(false);
+      return;
+    }
+
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      toast.error("The contact form is not configured yet. Please email lena@lennoxtalentgroup.com directly.");
       return;
     }
 
